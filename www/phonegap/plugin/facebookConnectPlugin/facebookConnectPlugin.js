@@ -54,14 +54,49 @@ if (!window.cordova) {
         (function (d, s, id) {
             var js, fjs = d.getElementsByTagName(s)[0];
             if (d.getElementById(id)) { return; }
-            js = d.createElement(s); 
+            js = d.createElement(s);
             js.id = id;
             js.src = "//connect.facebook.net/en_US/sdk.js";
             fjs.parentNode.insertBefore(js, fjs);
         } (document, 'script', 'facebook-jssdk'));
-        
+
     }, false);
-    
+
+} else if ("blackberry10" == cordova.platformId) {
+
+    //init
+    document.addEventListener("deviceready", function () {
+        facebookConnectPluginBB10.getAppId();
+    }, false);
+
+    var facebookConnectPlugin = {
+        getLoginStatus: function (s, f) {
+            facebookConnectPluginBB10.getLoginStatus(s, f);
+        },
+
+        showDialog: function (options, s, f) {
+            facebookConnectPluginBB10.showDialog(options, s, f);
+        },
+
+        login: function (permissions, s, f) {
+            facebookConnectPluginBB10.login(permissions, s, f);
+        },
+
+        getAccessToken: function(s, f) {
+            facebookConnectPluginBB10.getAccessToken(s,f);
+        },
+
+        logout: function (s, f) {
+            facebookConnectPluginBB10.logout(s, f);
+        },
+
+        api: function (graphPath, permissions, s, f) {
+            facebookConnectPluginBB10.api(graphPath, permissions, s, f);
+        }
+    };
+
+    module.exports = facebookConnectPlugin;
+
 } else {
 
     var exec = require("cordova/exec");

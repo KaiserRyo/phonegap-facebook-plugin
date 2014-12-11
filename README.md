@@ -8,6 +8,7 @@ The Facebook plugin for [Apache Cordova](http://incubator.apache.org/cordova/) a
 * This plugin is built for
 	* iOS FacebookSDK 3.16.1
 	* Android FacebookSDK 3.16.0
+	* BlackBerry 10 - Some features still in development
 * GitHub URL : [https://github.com/Wizcorp/phonegap-facebook-plugin/](https://github.com/Wizcorp/phonegap-facebook-plugin/)
 
 ## << --- Cordova Registry Warning [iOS]
@@ -29,6 +30,8 @@ To use this plugin you will need to make sure you've registered your Facebook ap
 - [Android Guide](platforms/android/README.md)
 
 - [Web App Guide](platforms/web/README.md)
+
+- BlackBerry 10 - Under development
 
 #### Example Apps
 
