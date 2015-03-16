@@ -2,6 +2,7 @@ var facebookConnectPluginBB10 = {
 
     FB_LOGIN_URL : 'https://www.facebook.com/dialog/oauth',
     FB_LOGOUT_URL : 'https://www.facebook.com/logout.php',
+    FB_DIALOG_URL : 'https://www.facebook.com/dialog/',
 
     // Store access_token in sessionStorage
     tokenStore : window.sessionStorage,
@@ -39,7 +40,87 @@ var facebookConnectPluginBB10 = {
     },
 
     showDialog: function (options, s, f) {
-        alert('Not yet implemented');
+
+        var dialogWindow;
+
+        // determine method chosen
+        if (options.method == "share") {
+             dialogWindow = window.open(facebookConnectPluginBB10.FB_DIALOG_URL + 'share?app_id=' + facebookConnectPluginBB10.fbAppId + '&display=popup&href=' + options.link + '&redirect_uri=' + options.redirect_uri);
+            window.inter = setInterval(function() {
+                var result = checkRedirect(dialogWindow, options.redirect_uri);
+                if (result.status == 'success') {
+                    window.clearInterval(inter);
+                    dialogWindow.window.close();
+                }
+                if (result.status == 'error') {
+                    window.clearInterval(inter);
+                }
+
+                }, 1000);
+        } else if (options.method == "share_open_graph") {            
+            dialogWindow = window.open(facebookConnectPluginBB10.FB_DIALOG_URL + 'share_open_graph?app_id=' + facebookConnectPluginBB10.fbAppId + '&display=popup&action_type=' + options.action_type + '&action_properties=' + options.action_properties + '&redirect_uri=' + options.redirect_uri);
+            window.inter = setInterval(function() {
+                var result = checkRedirect(dialogWindow, options.redirect_uri);
+                if (result.status == 'success') {
+                    window.clearInterval(inter)
+                    dialogWindow.window.close();
+                }
+                if (result.status == 'error') {
+                    window.clearInterval(inter);
+                }
+            }, 1000);
+        } else if (options.method == "apprequests") {
+            var url = facebookConnectPluginBB10.FB_DIALOG_URL + 'apprequests?app_id=' + facebookConnectPluginBB10.fbAppId + '&message=' + options.message + '&redirect_uri=' + options.redirect_uri;
+            // check if object_id is set
+            if (options.object_id) {
+                url = url + '&object_id=' + options.object_id;
+            }
+            // check if 'to' is set
+            if (options.to) {
+                url = url + '&to=' + options.to;
+            }
+            // check for action_type
+            if (options.action_type) {
+                url = url + '&action_type=' + options.action_type;
+            }   
+            // check for filters
+            if (options.filters) {
+                url = url + '&filters=' + options.filters;
+            }
+            // check for suggestions
+            if (options.suggestions) {
+                url = url + '&suggestions=' + options.suggestions;
+            }
+            // check for data
+            if (options.data) {
+                url = url + '&data=' + options.data;
+            }
+            // check for title 
+            if (options.title) {
+                url = url + '&title=' +options.title;
+            }
+
+            // open dialog
+            dialogWindow = window.open(url);
+            window.inter = setInterval(function() {
+                var result = checkRedirect(dialogWindow, options.redirect_uri);
+                if (result.status == 'success') {
+                    window.clearInterval(inter)
+                    dialogWindow.window.close();
+                }
+                if (result.status == 'error') {
+                    window.clearInterval(inter);
+                }
+            }, 1000);
+        } else {
+                // fail due to invalid method
+                alert('Invalid dialog method chosen.');
+                dialogStatus = {}
+                if (f) {
+                    dialogStatus.status = 'Invalid method';
+                    f(dialogStatus);
+                }
+        }
     },
 
     login: function (permissions, s, f) {
@@ -171,6 +252,21 @@ function toQueryString(obj) {
         }
     }
     return parts.join("&");
+}
+
+function checkRedirect(currentWindow, redirect_uri) {
+    var currentURL = currentWindow.window.location.href;
+    var hasError = currentURL.indexOf('error_code');
+    var inRedirect = currentURL.indexOf(redirect_uri);
+
+    // if (hasError != -1) {
+    if (currentWindow.window.document.title == "Error") {
+        return {status: 'error'};
+    } else if (inRedirect == 0) {
+        return {status: 'success'}
+    } else {
+        return {status: 'unknown'};
+    }
 }
 
 module.exports = facebookConnectPluginBB10;
