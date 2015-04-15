@@ -1,3 +1,10 @@
+/**
+* Based on OpenFB by Christophe Coenraets @ccoenraets
+* https://github.com/ccoenraets/OpenFB
+* Copyright 2014
+* Licensed under MIT
+*/
+
 var facebookConnectPluginBB10 = {
 
     FB_LOGIN_URL : 'https://www.facebook.com/dialog/oauth',

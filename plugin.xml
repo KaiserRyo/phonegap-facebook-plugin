@@ -114,8 +114,6 @@
     </platform>
 
     <platform name="blackberry10">
-        <!-- <lib-file src="src/blackberry10/native/device/libTemplate.so" arch="device"/>
-        <lib-file src="src/blackberry10/native/simulator/libTemplate.so" arch="simulator"/> -->
         <config-file target="www/config.xml" parent="/widget">
             <feature name="com.phonegap.plugins.facebookconnect.FacebookConnectPlugin" value="com.phonegap.plugins.facebookconnect.FacebookConnectPlugin" />
             <string name="FacebookAppID">$APP_ID</string>
