@@ -189,20 +189,25 @@ var facebookConnectPluginBB10 = {
     logout: function (s, f) {
         var logoutWindow,
         token = facebookConnectPluginBB10.tokenStore['access_token'];
-
+		loggedOut = false;
         if (token) {
+			loggedOut = true;
             facebookConnectPluginBB10.tokenStore.removeItem('access_token');
-            logoutWindow = window.open(FB_LOGOUT_URL + '?access_token=' + token + '&next=' + logoutRedirectURL, '_blank', 'location=no');
-            if (runningInCordova) {
+			var logoutRedirectURL = "https://www.facebook.com/";
+            logoutWindow = window.open(facebookConnectPluginBB10.FB_LOGOUT_URL + '?access_token=' + token + '&next=' + logoutRedirectURL, '_blank', 'location=no');
+			var runningInCordova = !!window.cordova;
+			if (runningInCordova) {
                 setTimeout(function() {
                     logoutWindow.close();
                 }, 1000);
             }
-        }
-
-        if (s) {
-            s({logout: 'success'});
-        }
+        } else if (f) {
+			f("Session not open");
+		}
+		
+		if(loggedOut && s) {
+			s("Ok");
+		}
     },
 
     api: function (graphPath, permissions, s, f) {
