@@ -47,87 +47,41 @@ var facebookConnectPluginBB10 = {
     },
 
     showDialog: function (options, s, f) {
-
         var dialogWindow;
-
+		var url = facebookConnectPluginBB10.FB_DIALOG_URL;
         // determine method chosen
-        if (options.method == "share") {
-             dialogWindow = window.open(facebookConnectPluginBB10.FB_DIALOG_URL + 'share?app_id=' + facebookConnectPluginBB10.fbAppId + '&display=popup&href=' + options.link + '&redirect_uri=' + options.redirect_uri);
-            window.inter = setInterval(function() {
-                var result = checkRedirect(dialogWindow, options.redirect_uri);
-                if (result.status == 'success') {
-                    window.clearInterval(inter);
-                    dialogWindow.window.close();
-                }
-                if (result.status == 'error') {
-                    window.clearInterval(inter);
-                }
-
-                }, 1000);
-        } else if (options.method == "share_open_graph") {            
-            dialogWindow = window.open(facebookConnectPluginBB10.FB_DIALOG_URL + 'share_open_graph?app_id=' + facebookConnectPluginBB10.fbAppId + '&display=popup&action_type=' + options.action_type + '&action_properties=' + options.action_properties + '&redirect_uri=' + options.redirect_uri);
-            window.inter = setInterval(function() {
-                var result = checkRedirect(dialogWindow, options.redirect_uri);
-                if (result.status == 'success') {
-                    window.clearInterval(inter)
-                    dialogWindow.window.close();
-                }
-                if (result.status == 'error') {
-                    window.clearInterval(inter);
-                }
-            }, 1000);
+		if(options.method == "feed") {	
+			url = url + 'feed?app_id=' + facebookConnectPluginBB10.fbAppId + '&display=popup' + '&redirect_uri=' + options.redirect_uri;
+			url = url + initFeedParameters(options);
+        } else if (options.method == "share") {
+			url = url + 'share?app_id=' + facebookConnectPluginBB10.fbAppId + '&display=popup&href=' + options.href + '&redirect_uri=' + options.redirect_uri;
+        } else if (options.method == "share_open_graph"){           
+            url = url + 'share_open_graph?app_id=' + facebookConnectPluginBB10.fbAppId + '&display=popup&action_type=' + options.action_type + '&action_properties=' + options.action_properties + '&redirect_uri=' + options.redirect_uri;
         } else if (options.method == "apprequests") {
-            var url = facebookConnectPluginBB10.FB_DIALOG_URL + 'apprequests?app_id=' + facebookConnectPluginBB10.fbAppId + '&message=' + options.message + '&redirect_uri=' + options.redirect_uri;
-            // check if object_id is set
-            if (options.object_id) {
-                url = url + '&object_id=' + options.object_id;
-            }
-            // check if 'to' is set
-            if (options.to) {
-                url = url + '&to=' + options.to;
-            }
-            // check for action_type
-            if (options.action_type) {
-                url = url + '&action_type=' + options.action_type;
-            }   
-            // check for filters
-            if (options.filters) {
-                url = url + '&filters=' + options.filters;
-            }
-            // check for suggestions
-            if (options.suggestions) {
-                url = url + '&suggestions=' + options.suggestions;
-            }
-            // check for data
-            if (options.data) {
-                url = url + '&data=' + options.data;
-            }
-            // check for title 
-            if (options.title) {
-                url = url + '&title=' +options.title;
-            }
-
-            // open dialog
-            dialogWindow = window.open(url);
-            window.inter = setInterval(function() {
-                var result = checkRedirect(dialogWindow, options.redirect_uri);
-                if (result.status == 'success') {
-                    window.clearInterval(inter)
-                    dialogWindow.window.close();
-                }
-                if (result.status == 'error') {
-                    window.clearInterval(inter);
-                }
-            }, 1000);
-        } else {
+            url = url + 'apprequests?app_id=' + facebookConnectPluginBB10.fbAppId + '&message=' + options.message + '&redirect_uri=' + options.redirect_uri;
+			url = url + initAppRequestsParameters(options);
+		} else if (options.method == "send"){ //
+			url = url + 'send?app_id=' + facebookConnectPluginBB10.fbAppId + '&link=' + options.link + '&redirect_uri=' + options.redirect_uri;
+		} else {
                 // fail due to invalid method
-                alert('Invalid dialog method chosen.');
-                dialogStatus = {}
-                if (f) {
-                    dialogStatus.status = 'Invalid method';
-                    f(dialogStatus);
-                }
-        }
+            dialogStatus = {}
+            if (f) {
+                dialogStatus.status = 'Invalid method';
+                f(dialogStatus);
+            }
+		}
+		dialogWindow = window.open(url);
+		window.inter = setInterval(function(){
+			var result = checkRedirect(dialogWindow, options.redirect_uri);
+			if (result.status == 'success') {
+				window.clearInterval(inter);
+				dialogWindow.window.close();
+			}
+			if (result.status == 'error') {
+				window.clearInterval(inter);
+			}
+
+			}, 1000);
     },
 
     login: function (permissions, s, f) {
@@ -278,7 +232,76 @@ function checkRedirect(currentWindow, redirect_uri) {
         return {status: 'success'}
     } else {
         return {status: 'unknown'};
+
+function initAppRequestsParameters(options){
+// check if object_id is set
+	var parameterString = "";
+	if (options.object_id) {
+		parameterString = parameterString + '&object_id=' + options.object_id;
+	}
+	// check if 'to' is set
+	if (options.to) {
+		parameterString = parameterString + '&to=' + options.to;
+	}
+	// check for action_type
+	if (options.action_type) {
+		parameterString = parameterString + '&action_type=' + options.action_type;
+	}   
+	// check for filters
+	if (options.filters) {
+		parameterString = parameterString + '&filters=' + options.filters;
+	}
+	// check for suggestions
+	if (options.suggestions) {
+		parameterString = parameterString + '&suggestions=' + options.suggestions;
+	}
+            // check for data
+    if (options.data) {
+		parameterString = parameterString + '&data=' + options.data;
     }
+    // check for title 
+    if (options.title) {
+        parameterString = parameterString + '&title=' +options.title;
+    }
+	return parameterString
 }
 
+function initFeedParameters(options){
+	var parameterString = "";
+	// check if 'to' is set
+	if (options.to) {
+		parameterString = parameterString + '&to=' + options.to;
+	}
+	if (options.from) {
+		parameterstring = parameterString + '&from' + options.from;
+	}
+    // check for link
+    if (options.link) {
+		parameterString = parameterString + '&link=' + options.link;
+    }
+    // check for picture 
+    if (options.picture) {
+        parameterString = parameterString + '&picture=' +options.picture;
+    }
+	// check for source 
+    if (options.source) {
+        parameterString = parameterString + '&source=' +options.source;
+    }
+	// check for name
+	if(options.name) {
+		parameterString = parameterString + '&name=' + options.name;
+	}
+	// check for caption
+	if(options.caption) {
+		parameterString = parameterString + '&caption=' + options.caption;
+	}
+	// check for name
+	if(options.description) {
+		parameterString = parameterString + '&description=' + options.description;
+	}
+	if(options.ref) {
+		parameterString = parameterString + '&ref=' + options.ref;
+	}
+	return parameterString;
+}
 module.exports = facebookConnectPluginBB10;
