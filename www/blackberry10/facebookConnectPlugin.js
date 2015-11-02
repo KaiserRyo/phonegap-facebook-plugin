@@ -221,17 +221,23 @@ function toQueryString(obj) {
 }
 
 function checkRedirect(currentWindow, redirect_uri) {
-    var currentURL = currentWindow.window.location.href;
-    var hasError = currentURL.indexOf('error_code');
-    var inRedirect = currentURL.indexOf(redirect_uri);
+	try {
+		var currentURL = currentWindow.window.location.href;
+		var hasError = currentURL.indexOf('error_code');
+		var inRedirect = currentURL.indexOf(redirect_uri);
 
-    // if (hasError != -1) {
-    if (currentWindow.window.document.title == "Error") {
-        return {status: 'error'};
-    } else if (inRedirect == 0) {
-        return {status: 'success'}
-    } else {
-        return {status: 'unknown'};
+		// if (hasError != -1) {
+		if (currentWindow.window.document.title == "Error") {
+			return {status: 'error'};
+		} else if (inRedirect == 0) {
+			return {status: 'success'}
+		} else {
+			return {status: 'unknown'};
+		}
+	} catch (error) {
+		return {status: 'error'}; 
+	}
+}
 
 function initAppRequestsParameters(options){
 // check if object_id is set
