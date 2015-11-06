@@ -54,8 +54,26 @@ var facebookConnectPluginBB10 = {
 			url = url + 'feed?app_id=' + facebookConnectPluginBB10.fbAppId + '&display=popup' + '&redirect_uri=' + options.redirect_uri;
 			url = url + initFeedParameters(options);
         } else if (options.method == "share") {
+			if(!options.href){
+				blackberry.invoke.invoke({
+				target: "Facebook",
+				action: "bb.action.SHARE",
+				type: "text/plain",
+				data: " "
+				}, s, f);
+				return;
+			}
 			url = url + 'share?app_id=' + facebookConnectPluginBB10.fbAppId + '&display=popup&href=' + options.href + '&redirect_uri=' + options.redirect_uri;
-        } else if (options.method == "share_open_graph"){           
+        } else if (options.method == "share_open_graph"){  
+			if(!options.action_type && !options.action_properties) {
+				blackberry.invoke.invoke({
+						target: "Facebook",
+						action: "bb.action.SHARE",
+						type: "text/plain",
+						data: " "
+					}, s, f);
+				return;
+			}
             url = url + 'share_open_graph?app_id=' + facebookConnectPluginBB10.fbAppId + '&display=popup&action_type=' + options.action_type + '&action_properties=' + options.action_properties + '&redirect_uri=' + options.redirect_uri;
         } else if (options.method == "apprequests") {
             url = url + 'apprequests?app_id=' + facebookConnectPluginBB10.fbAppId + '&message=' + options.message + '&redirect_uri=' + options.redirect_uri;
