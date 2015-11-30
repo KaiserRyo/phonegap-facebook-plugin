@@ -46,26 +46,29 @@ For all API calls use `facebookConnectPluginBB10` instead of `facebookConnectPlu
 
 ###Login
 
-Any requests for permissions must be handled with login:
+Multiple permission requests are allowed and can only be added when calling Login.
+
+For example:
 ```
-facebookConnectPluginBB10.login(["user_friends", "email", "public_profile"],app.successHandler, app.errorHandler)
+facebookConnectPluginBB10.login(["user_friends", "email", "public_profile"], function(response) {console.log(response)},  function(response) {console.log(response)})
 ```
 
 For more information see: [Facebook Manual Login Documentation] (https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow)
 
 ###Get Status
 
-The most useful fields in `authResposne` are 'userID, accessToken and expiresIn'
-
-For more information see: [Facebook Manual Login Documentation] (https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow)
+Success function:
+Most useful fields are `authResposne` are `userID`, `accessToken`, and `expiresIn` this is the same for login success function as well
 
 ###Show a Dialog
 Send Dialog is not supported:  [Send Dialog Documentation](https://developers.facebook.com/docs/sharing/reference/send-dialog)
 
 ###The Graph API
-Permissions are handled strictly with Login, so permissions parameter should always be empty:
+Permissions are handled strictly with Login, so permissions parameter should always be `[]`.
+
+For example
 ```
-facebookConnectPluginBB10.api("me?fields=permissions", [],app.successHandler, app.errorHandler)
+facebookConnectPluginBB10.login("me", [], function(response) {console.log(response)},  function(response) {console.log(response)})
 ```
 ###Events:
 Not supported for Blackberry10 because there is no [API](https://developers.facebook.com/docs/app-events)
