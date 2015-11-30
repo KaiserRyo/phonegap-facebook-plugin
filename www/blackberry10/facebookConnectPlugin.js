@@ -34,11 +34,21 @@ var facebookConnectPluginBB10 = {
 
     getLoginStatus: function (s, f) {
         var token = facebookConnectPluginBB10.tokenStore['access_token'],
+		expires_in = facebookConnectPluginBB10.tokenStore['expires_in'],
         loginStatus = {};
         if (token) {
-            loginStatus.status = 'connected';
-            loginStatus.authResponse = {token: token};
-            if (s) s(loginStatus);
+			facebookConnectPluginBB10.api("me",[], function(response){
+				loginStatus.status = 'connected';
+				loginStatus.authResponse = {
+					userID:response.id,
+					accessToken: token,
+					session_Key: true,
+					expiresIn: expires_in,
+					sig: "..."
+				}
+				if (s) s(loginStatus);
+				return;
+			}, f);
         } else {
             loginStatus.status = 'unknown';
             if (f) f(loginStatus);
@@ -88,7 +98,7 @@ var facebookConnectPluginBB10 = {
 					}, s, f);
 			return;
 		} */else {
-                // fail due to invalid method
+            // fail due to invalid method
             dialogStatus = {}
             if (f) {
                 dialogStatus.status = 'Invalid method';
@@ -115,7 +125,7 @@ var facebookConnectPluginBB10 = {
 			if (result.status == 'error_code'){
 				//Parse out error 
 				if(f && result.response){
-					f(ParseDialogError(result.response, options.method));
+					f(ParseDialogError(result.response));
 				}
 				window.clearInterval(inter);
 				dialogWindow.window.close();
@@ -142,15 +152,26 @@ var facebookConnectPluginBB10 = {
         startTime = new Date().getTime();
         redirectUri = facebookConnectPluginBB10.FB_LOGIN_URL + '?client_id=' + facebookConnectPluginBB10.fbAppId + '&redirect_uri=' + oauthRedirectURL +
             '&response_type=token&scope=' + scope;
-        loginWindow = window.open('https://www.facebook.com/dialog/oauth?client_id=' + facebookConnectPluginBB10.fbAppId + '&redirect_uri=https://www.facebook.com/connect/login_success.html&response_type=token&scope=' + scope, '_blank');
-
+		//Wow, look how much more readable that is.
+		var url = 'https://www.facebook.com/dialog/oauth?client_id=' + facebookConnectPluginBB10.fbAppId;
+		url = url + '&redirect_uri=https://www.facebook.com/connect/login_success.html&response_type=token&auth_type=rerequest';
+		url = url + '&scope=' + scope;
+        loginWindow = window.open(url, '_blank');
         window.inter = setInterval(function() {
             var currentURL = loginWindow.window.location.href;
             var callbackURL = redirectUri;
             var inCallback = currentURL.indexOf("access_token=");
+			var hasError = currentURL.indexOf("error_code=");
 
             // location has changed to our callback url
-            if (inCallback != -1) {
+            if(hasError >= 0){
+				if(f){
+					f(ParseDialogError(currentURL))	
+				}
+				window.clearInterval(inter);
+				loginWindow.window.close();
+				return; 
+			} else if (inCallback != -1) {
 
                 // stop the interval
                 window.clearInterval(inter);
@@ -160,12 +181,25 @@ var facebookConnectPluginBB10 = {
                 code = code.split('access_token=');
                 code = code[1];
                 code = code.split('&expires_in=');
-                code = code[0];
-                facebookConnectPluginBB10.tokenStore.access_token = code;
-
+				access_token = code[0];
+				expires_In = code[1];
+				//expires_In = parseInt(code[1]);
+                facebookConnectPluginBB10.tokenStore.access_token = access_token;
+				facebookConnectPluginBB10.tokenStore.expires_in = expires_In;
                 // close the loginWindow
                 loginWindow.window.close();
-                s({status: 'true', accessToken: code});
+                facebookConnectPluginBB10.api("me",[], function(response){
+				s({
+					status: 'connected',
+					authResponse: {
+							accessToken: access_token,
+							expiresIn: expires_In,
+							session_key: true,
+							sig: "...",
+							secret: "...",
+							userId: response.id
+					}
+				})}, f);
             }
         }, 1000);
     },
@@ -187,6 +221,7 @@ var facebookConnectPluginBB10 = {
         if (token) {
 			loggedOut = true;
             facebookConnectPluginBB10.tokenStore.removeItem('access_token');
+			facebookConnectPluginBB10.tokenStore.removeItem('expires_in');
 			var logoutRedirectURL = "https://www.facebook.com/";
             logoutWindow = window.open(facebookConnectPluginBB10.FB_LOGOUT_URL + '?access_token=' + token + '&next=' + logoutRedirectURL, '_blank', 'location=no');
 			var runningInCordova = !!window.cordova;
@@ -395,7 +430,7 @@ function CheckForPostID(response, method){
 	return false;
 }
 
-function ParseDialogError(response, method){
+function ParseDialogError(response){
 	var ret = {};
 	var raw = response.split("?")[1];
 	raw = raw.split("#_=_")[0];
