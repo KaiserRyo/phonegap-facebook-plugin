@@ -55,7 +55,7 @@ For more information see: [Facebook Manual Login Documentation] (https://develop
 
 ###Get Status
 
-The most useful fields are `authResposne` are userID, accessToken and expiresIn
+The most useful fields in `authResposne` are userID, accessToken and expiresIn
 
 For more information see: [Facebook Manual Login Documentation] (https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow)
 
