@@ -36,27 +36,27 @@ You must change the `meta` tag for Content-Security-Policy in the `index.html` t
 
 1. Under **Client OAuth Settings** enable **WebOAuth Login**
 
-1. In the Valid **OAuth redirect URIs** add [https://www.facebook.com/connect/login_success.html]
+1. In the Valid **OAuth redirect URIs** add https://www.facebook.com/connect/login_success.html
 
 1. At bottom select **Save Changes**
 
-##Blackberry Notes
+##Blackberry 10 API Notes
 
-- Login
+###Login
+
 Any requests for permissions must be handled with login:
 ```
 facebookConnectPluginBB10.login(["user_friends", "email", "public_profile"],app.successHandler, app.errorHandler)
 ```
 
 For more information see: [Facebook Manual Login Documentation] (https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow)
-- Show a Dialog
-Send Dialog is not supported because of mobile limitation: [https://developers.facebook.com/docs/sharing/reference/send-dialog]
-- The Graph API
+###Show a Dialog
+Send Dialog is not supported because of [mobile limitation](https://developers.facebook.com/docs/sharing/reference/send-dialog)
+###The Graph API
 Permissions are handled strictly with Login, so parameter should always be empty:
 ```
 facebookConnectPluginBB10.api("me?fields=permissions", [],app.successHandler, app.errorHandler)
 ```
-
-- Events:
+###Events:
 Not supported for Blackberry10 because there is no [API](https://developers.facebook.com/docs/app-events)
 
