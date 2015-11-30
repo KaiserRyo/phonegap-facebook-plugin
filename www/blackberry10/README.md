@@ -2,7 +2,7 @@
 
 To use this plugin you will need to make sure you've registered your Facebook app with Facebook and have an `APP_ID` [https://developers.facebook.com/apps](https://developers.facebook.com/apps).
 
-This plugin was built from a Micro-Library for facebook [https://github.com/ccoenraets/OpenFB]
+This plugin was built from a Micro-Library for facebook called [openFB] (https://github.com/ccoenraets/OpenFB)
 
 ## Install
 
