@@ -61,14 +61,14 @@ Success function:
 Most useful fields are `authResposne` are `userID`, `accessToken`, and `expiresIn` this is the same for login success function as well
 
 ###Show a Dialog
-Send Dialog is not supported:  [Send Dialog Documentation](https://developers.facebook.com/docs/sharing/reference/send-dialog)
+Send Dialog is not supported.  [Send Dialog Documentation](https://developers.facebook.com/docs/sharing/reference/send-dialog)
 
 ###The Graph API
 Permissions are handled strictly with Login, so permissions parameter should always be `[]`.
 
-For example
+For example:
 ```
-facebookConnectPluginBB10.login("me", [], function(response) {console.log(response)},  function(response) {console.log(response)})
+facebookConnectPluginBB10.api("me", [], function(response) {console.log(response)},  function(response) {console.log(response)})
 ```
 ###Events:
 Not supported for Blackberry10 because there is no [API](https://developers.facebook.com/docs/app-events)
