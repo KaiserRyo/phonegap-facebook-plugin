@@ -42,6 +42,8 @@ You must change the `meta` tag for Content-Security-Policy in the `index.html` t
 
 ##Blackberry 10 API Notes
 
+When calling the API use `facebookConnectPluginBB10` instead of `facebookConnectPlugin` for all API calls
+
 ###Login
 
 Any requests for permissions must be handled with login:
@@ -50,10 +52,18 @@ facebookConnectPluginBB10.login(["user_friends", "email", "public_profile"],app.
 ```
 
 For more information see: [Facebook Manual Login Documentation] (https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow)
+
+###Get Status
+
+The most useful fields are `authResposne` are userID, accessToken and expiresIn
+
+For more information see: [Facebook Manual Login Documentation] (https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow)
+
 ###Show a Dialog
-Send Dialog is not supported because of [mobile limitation](https://developers.facebook.com/docs/sharing/reference/send-dialog)
+Send Dialog is not supported:  [Send Dialog Documentation](https://developers.facebook.com/docs/sharing/reference/send-dialog)
+
 ###The Graph API
-Permissions are handled strictly with Login, so parameter should always be empty:
+Permissions are handled strictly with Login, so permissions parameter should always be empty:
 ```
 facebookConnectPluginBB10.api("me?fields=permissions", [],app.successHandler, app.errorHandler)
 ```
