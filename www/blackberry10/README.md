@@ -42,7 +42,7 @@ You must change the `meta` tag for Content-Security-Policy in the `index.html` t
 
 ##Blackberry 10 API Notes
 
-When calling the API use `facebookConnectPluginBB10` instead of `facebookConnectPlugin` for all API calls
+For all API calls use `facebookConnectPluginBB10` instead of `facebookConnectPlugin`
 
 ###Login
 
@@ -55,7 +55,7 @@ For more information see: [Facebook Manual Login Documentation] (https://develop
 
 ###Get Status
 
-The most useful fields in `authResposne` are userID, accessToken and expiresIn
+The most useful fields in `authResposne` are 'userID, accessToken and expiresIn'
 
 For more information see: [Facebook Manual Login Documentation] (https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow)
 
