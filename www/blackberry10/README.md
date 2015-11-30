@@ -22,14 +22,14 @@ $ cordova plugin add https://github.com/Wizcorp/phonegap-facebook-plugin/ --vari
 
 ## Setup
 
-- You must change the Content-Security-Policy  in your project `index.html` to look like this:
+###Content Security Policy Configuration: 
+You must change the `meta` tag for Content-Security-Policy in the `index.html` to look like this:
 
 ```html
 <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; connect-src local: 'self' http://localhost:8472 https://graph.facebook.com/" >
 ```
 
-- In your facebook application 
-
+###Facebook Application Configuration:
 1. Select **Settings**
 
 1. Select **Advanced**
@@ -42,24 +42,21 @@ $ cordova plugin add https://github.com/Wizcorp/phonegap-facebook-plugin/ --vari
 
 ##Blackberry Notes
 
--Login
+- Login
 Any requests for permissions must be handled with login:
-
-'''
+```
 facebookConnectPluginBB10.login(["user_friends", "email", "public_profile"],app.successHandler, app.errorHandler)
-'''
+```
 
-For more information see: [https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow]
--Get Login Status:
-
-For more information refer to
-
--Show a Dialog
+For more information see: [Facebook Manual Login Documentation] (https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow)
+- Show a Dialog
 Send Dialog is not supported because of mobile limitation: [https://developers.facebook.com/docs/sharing/reference/send-dialog]
--The Graph API
+- The Graph API
 Permissions are handled strictly with Login, so parameter should always be empty:
-'''
+```
 facebookConnectPluginBB10.api("me?fields=permissions", [],app.successHandler, app.errorHandler)
-'''
--Events:
-Not supported because it is only supported by Android and iOS platforms
+```
+
+- Events:
+Not supported for Blackberry10 because there is no [API](https://developers.facebook.com/docs/app-events)
+
