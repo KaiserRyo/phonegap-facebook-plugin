@@ -158,7 +158,15 @@ var facebookConnectPluginBB10 = {
         url = url + '&scope=' + scope;
         loginWindow = window.open(url, '_blank');
         window.inter = setInterval(function() {
-            var currentURL = loginWindow.window.location.href;
+            var currentURL = "";
+            try{
+                currentURL = loginWindow.window.location.href;
+            }catch(error){
+                    if(f){
+                        f("User cancelled dialog");
+                    }
+                    window.clearInterval(inter);
+            }
             var callbackURL = redirectUri;
             var inCallback = currentURL.indexOf("access_token=");
             var hasError = currentURL.indexOf("error_code=");

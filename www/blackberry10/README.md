@@ -14,10 +14,10 @@ To install the plugin in your app, execute the following (replace variables wher
 # Create initial Cordova app
 $ cordova create myApp
 $ cd myApp/
-$ cordova platform add browser
+$ cordova platform add blackberry10
 
 # Remember to replace APP_ID and APP_NAME variables
-$ cordova plugin add https://github.com/Wizcorp/phonegap-facebook-plugin/ --variable APP_ID="123456789" --variable APP_NAME="myApplication"
+$ cordova plugin add https://github.com/blackberry/phonegap-facebook-plugin --variable APP_ID="123456789" --variable APP_NAME="myApplication"
 ```
 
 ## Setup

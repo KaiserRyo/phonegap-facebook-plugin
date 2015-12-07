@@ -128,7 +128,7 @@
         <js-module src="www/blackberry10/facebookConnectPlugin.js" name="FacebookConnectPluginBB10" >
             <clobbers target="window.facebookConnectPluginBB10" />
         </js-module>
-		<dependency id='cordova-plugin-bb-invoke' url='.'/>
+		<dependency id='cordova-plugin-bb-invoke'/>
     </platform>
 
 
