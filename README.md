@@ -31,7 +31,7 @@ To use this plugin you will need to make sure you've registered your Facebook ap
 
 - [Web App Guide](platforms/web/README.md)
 
-- BlackBerry 10 - Under development
+- [BlackBerry 10 App Guide] (www/blackberry10/README.md)
 
 #### Example Apps
 
